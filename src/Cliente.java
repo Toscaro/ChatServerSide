@@ -1,16 +1,22 @@
 import java.net.Socket;
 
-public class Usuario {
+public class Cliente {
     private String nome;
+    private String userName;
     private Socket socket;
 
-    public Usuario(String nome, Socket socket) {
+    public Cliente (String nome, String userName, Socket socket) {
         this.nome = nome;
+        this.userName = userName;
         this.socket = socket;
     }
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public void setSocket(Socket socket) {
@@ -19,6 +25,10 @@ public class Usuario {
 
     public String getNome() {
         return nome;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 
     public Socket getSocket() {
