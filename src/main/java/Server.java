@@ -36,7 +36,7 @@ public class Server {
             Socket socket = server.accept();
             System.out.println("Novo cliente conectado");
 
-            new ReceptorDeSockets(socket);
+            Thread server = new Server()
         }
 
     }

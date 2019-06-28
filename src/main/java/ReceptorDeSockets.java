@@ -1,15 +1,14 @@
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
-class ReceptorDeSockets {
+class ReceptorDeSockets extends Thread {
 
     private Socket mSocket;
+    private BufferedReader mInputCliente;
 
     /**
      * @param socket recebe a conexao de um novo cliente.
@@ -17,23 +16,32 @@ class ReceptorDeSockets {
      */
     ReceptorDeSockets(Socket socket) throws IOException {
         this.mSocket = socket;
-        new Thread(new MessageHandler(mSocket.getInputStream())).start();
+        mInputCliente = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
 
-    public class MessageHandler implements Runnable {
+    @Override
+    public void run() {
+        System.out.println("input cliente");
 
-        private InputStream mInputCliente;
+        System.out.println("While");
+        while (true) {
+            System.out.println("Try");
+            try {
+                System.out.println("Read message from client");
 
-        MessageHandler(InputStream inputStream) {
-            this.mInputCliente = inputStream;
-        }
+                String s = mInputCliente.readLine();
 
-        @Override
-        public void run() {
-            System.out.println("input cliente");
-            Scanner scanner = new Scanner(mInputCliente);
-            while (scanner.hasNextLine()) {
-                new ReceptorDeJson(scanner.nextLine(), mSocket).init();
+                if (s != null && !s.isEmpty()) {
+                    //Print message from client
+                    System.out.println("Message from client: " + s);
+                    new ReceptorDeJson(s, mSocket).init();
+                } else {
+                    System.out.println("null or empty");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Read failed: " + e.toString());
             }
 
         }
